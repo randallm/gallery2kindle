@@ -50,17 +50,15 @@ def imgur(imgur_url, kindle_type, gallery_name):
             pass
         number_urls = number_urls + 1
 
-    print imgur_url
-
     for url in imgur_url:
         url = url[:-7]
 
     # Add kindle res info //still need to account for 'page down' size
     if kindle_type == '3':
-        kindle_width = '632'
+        kindle_width = '600'
         kindle_height = '800'
 
-    final_html = '<!doctype html><title>%s - Gallery2Kindle</title><style>img{max-width:100%%;max-height:100%%;}div{width:%spx;height:%spx;}</style><div><h1>%s</h1></div>' % (gallery_name, kindle_width, kindle_height, gallery_name)
+    final_html = '<!doctype html><title>%s - Gallery2Kindle</title><style>img{max-width:100%%;max-height:100%%;}div{width:%spx;height:%spx;}</style><center><div style="margin:0"><h1>%s</h1></div>' % (gallery_name, kindle_width, kindle_height, gallery_name)
     for url in imgur_url:
         final_html = final_html + '<div><img src="' + url + '"></div>'
     final_html = open(gallery_name + '.html', 'w+').write(final_html)
@@ -71,7 +69,17 @@ def dropbox(dropbox_dir, gallery_name):
     shutil.copy2(gallery_name + '.html', dropbox_dir + '/Public/' + gallery_name + '.html')
     os.remove(gallery_name + '.html')
 
+    import bitly
+
+    # bitly = bitlyapi.BitLy('your_api_username', 'your_api_key')
+    bitly = bitly.BitLy('randallma', 'R_0d72dc04afb278011bbb2bf4bb15df2b')
+    # res = b.shorten(longUrl='http://dl.dropbox.com/u/your_user_id' + gallery_name + '.html')
+    res = bitly.shorten(longUrl='http://dl.dropbox.com/u/413327/' + gallery_name + '.html')
+    print
+    print 'bit.ly URL: ' + res['url']
+    print
+
 if __name__ == '__main__':
     imgur(imgur_url, kindle_type, gallery_name)
-    if dropbox_dir == True:
+    if bool(dropbox_dir) == True:
         dropbox(dropbox_dir, gallery_name)
