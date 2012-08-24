@@ -3,16 +3,16 @@ gallery2kindle
 
 gallery2kindle is a Python 2 script that takes Imgur galleries and embeds them into blank web pages optimally formatted for the 2/3/4 generation Kindle web browser.
 
-Javascript must be enabled, and zoom settings should be set to "fit-to-width" for optimal browsing experience.
+Javascript must be enabled, and zoom settings should be set to "fit-to-width" (default) for optimal browsing experience.
 
 Usage
 -----
 
-./gallery2kindle.py [Imgur Gallery URL] [Gallery Name]
+    ./gallery2kindle.py [Imgur Gallery URL] [Gallery Name]
 
 **Example**
 
-gallery2kindle.py http://imgur.com/a/Qlh7Y "Gallery Title"
+    gallery2kindle.py http://imgur.com/a/Qlh7Y "Gallery Title"
 
 Requirements
 ------------
