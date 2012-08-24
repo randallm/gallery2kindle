@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+<title>gallery2kindle</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta charset="utf-8">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://malsup.github.com/jquery.cycle.all.js"></script>
+<script>
+$('#gallery').cycle({
+    fx: 'none',
+    timeout: 0,
+    next: '#next',
+    prev: '#back'
+});
+</script>
+<style>
+/* only tested on Kindle 3; should theoretically work on all 2/3/4 gen */
+#gallery img{
+    width: 600px;
+    height: 675px;
+}
+</style>
+</head>
+<body>
+<center>
+<div id="gallery"><img src="http://i.imgur.com/kwWo0.jpg"><img src="http://i.imgur.com/YDktq.jpg"><img src="http://i.imgur.com/jtONu.jpg"><img src="http://i.imgur.com/Eukht.jpg"><img src="http://i.imgur.com/cz7Jp.jpg"><img src="http://i.imgur.com/oGrbO.jpg"><img src="http://i.imgur.com/ysxaZ.jpg"><img src="http://i.imgur.com/kqm6B.jpg"><img src="http://i.imgur.com/cHvxn.jpg"><img src="http://i.imgur.com/gjP2v.jpg"><img src="http://i.imgur.com/gGaHP.jpg"><img src="http://i.imgur.com/qurgI.jpg"><img src="http://i.imgur.com/qacZw.jpg"><img src="http://i.imgur.com/F22Jq.jpg"><img src="http://i.imgur.com/XDh9r.jpg"><img src="http://i.imgur.com/HvvTK.jpg"><img src="http://i.imgur.com/GVWSP.jpg"><img src="http://i.imgur.com/EmUZ3.jpg"><img src="http://i.imgur.com/cchWP.jpg"><img src="http://i.imgur.com/1zyDy.jpg"><img src="http://i.imgur.com/ZrrQl.jpg"><img src="http://i.imgur.com/6iPAR.jpg"><img src="http://i.imgur.com/1FLPP.jpg"><img src="http://i.imgur.com/tq3cT.jpg"><img src="http://i.imgur.com/Bb5x2.jpg"><img src="http://i.imgur.com/BLqRg.jpg"><img src="http://i.imgur.com/CTmMW.jpg"><img src="http://i.imgur.com/pM7fh.jpg"><img src="http://i.imgur.com/hdrNK.jpg"></div>
+<a href="javascript:void(0)" id="next">next</a>&nbsp;&nbsp;&nbsp;
+<a href="javascript:void(0)" id="back">back</a>

@@ -1,85 +1,113 @@
-#!/usr/bin/python2.7
-
-# TODO:
-# fix code to conform to style guide (http://www.python.org/dev/peps/pep-0008/)
-# change width of webpage to account for kindle scrolling size
-# add bit.ly shortening functionality
-# add local image mirror functionality
+#!/usr/bin/env python2
+# coding: utf-8
 
 import os
 import re
-import urllib2
+import requests
 import shutil
 import argparse
+import bitly
 
-parser = argparse.ArgumentParser(description='Takes Imgur gallery and Kindle information; converts into Kindle-optimized gallery webpage.')
-parser.add_argument('imgur_url', metavar='URL', help='URL of Imgur gallery')
-parser.add_argument('-k', dest='kindle_type', default='3', help='Kindle model (defaults to Kindle 3); possible values include 1, 2, 3 & dx')
-parser.add_argument('-n', dest='gallery_name', default='Gallery', help='Name of new, generated gallery')
-parser.add_argument('-d', dest='dropbox_dir', help='Dropbox directory (ex: ~/Folder1/Dropbox)')
+parser = argparse.ArgumentParser(
+    description='Takes Imgur gallery and Kindle information; converts into Kindle-optimized gallery webpage.'
+)
+
+parser.add_argument('imgur_url',
+    metavar='URL',
+    help='URL of Imgur gallery'
+)
+
+
+parser.add_argument('gallery_name',
+    metavar='Gallery Name',
+    help='Title of new, generated gallery'
+)
+
+# parser.add_argument('-d',
+#     dest='dropbox_dir',
+#     help='Dropbox directory (ex: ~/Folder1/Dropbox)'
+# )
+
 args = vars(parser.parse_args())
 
 for var, value in args.items():
-    # puts all namespace entires into dictionary and uses first dictionary's keys to get new variable names; then takes first dictionary's values and uses them as new variable values 
+    # puts all namespace entires into dictionary and uses first dictionary's
+    # keys to get new variable names; then takes first dictionary's values
+    # and uses them as new variable values
     globals()[var] = value
 
-def imgur(imgur_url, kindle_type, gallery_name):
+
+def imgur(imgur_url, gallery_name):
+    # reformat URL
     imgur_url = re.sub('\d$', '', imgur_url)
     if imgur_url.endswith('#'):
         imgur_url = imgur_url[:-1]
     if '/all' not in imgur_url:
         imgur_url = imgur_url + '/all'
-    if imgur_url.startswith('http://') == False:
+    if not imgur_url.startswith('http://'):
         imgur_url = 'http://' + imgur_url
 
-    imgur_url = urllib2.urlopen(imgur_url).read().splitlines()
-      
-    imgur_url = [line for line in imgur_url if line.startswith('<img alt="" src="')]
-    imgur_url = '\n'.join(imgur_url)
-    imgur_url = re.findall(r'(https?://[^\s]+)', imgur_url)
+    # find all lines with <img> tags in page
+    html = requests.get(imgur_url).content.replace('\t', '').splitlines()
+    images = [line for line in html if line.startswith('<img alt="" src="')]
 
-    number_urls = 0
-    while number_urls < len(imgur_url):
-        if imgur_url[number_urls].endswith('s.jpg"/>'):
-            imgur_url[number_urls] = imgur_url[number_urls][:-8] + '.jpg'
-        elif imgur_url[number_urls].endswith('s.png"/>'):
-            imgur_url[number_urls] = imgur_url[number_urls][:-8] + '.png'
-        elif imgur_url[number_urls].endswith('s.gif"/>'):
-            imgur_url[number_urls] = imgur_url[number_urls][:-8] + '.gif'
-        else:
-            pass
-        number_urls = number_urls + 1
+    # reformat lines to links and remove thumbnailing
+    images = [i[17:] for i in images]
+    images = [fi[:-10] + '.jpg' for fi in images]
 
-    for url in imgur_url:
-        url = url[:-7]
+    final_html = '''<!doctype html>
+<html>
+<head>
+<title>%s</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta charset="utf-8">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://malsup.github.com/jquery.cycle.all.js"></script>
+<script>
+$('#gallery').cycle({
+    fx: 'none',
+    timeout: 0,
+    next: '#next',
+    prev: '#back'
+});
+</script>
+<style>
+/* only tested on Kindle 3; should theoretically work on all 2/3/4 gen */
+#gallery img{
+    width: 600px;
+    height: 675px;
+}
+</style>
+</head>
+<body>
+<center>
+<div id="gallery">''' % (gallery_name)
 
-    # Add kindle res info //still need to account for 'page down' size
-    if kindle_type == '3':
-        kindle_width = '600'
-        kindle_height = '800'
+    for image in images:
+        final_html += '<img src="' + image + '">'
 
-    final_html = '<!doctype html><title>%s - Gallery2Kindle</title><style>img{max-width:100%%;max-height:100%%;}div{width:%spx;height:%spx;}</style><center><div style="margin:0"><h1>%s</h1></div>' % (gallery_name, kindle_width, kindle_height, gallery_name)
-    for url in imgur_url:
-        final_html = final_html + '<div><img src="' + url + '"></div>'
+    final_html += '''</div>
+<a href="javascript:void(0)" id="next">next</a>&nbsp;&nbsp;&nbsp;
+<a href="javascript:void(0)" id="back">back</a>'''
     final_html = open(gallery_name + '.html', 'w+').write(final_html)
 
-def dropbox(dropbox_dir, gallery_name):
-    dropbox_dir = os.path.expanduser(dropbox_dir)
 
-    shutil.copy2(gallery_name + '.html', dropbox_dir + '/Public/' + gallery_name + '.html')
-    os.remove(gallery_name + '.html')
+# def dropbox(dropbox_dir, gallery_name):
+#     dropbox_dir = os.path.expanduser(dropbox_dir)
 
-    import bitly
+#     shutil.copy2(gallery_name + '.html', dropbox_dir + '/Public/' + gallery_name + '.html')
+#     os.remove(gallery_name + '.html')
 
-    # bitly = bitlyapi.BitLy('your_api_username', 'your_api_key')
-    bitly = bitly.BitLy('randallma', 'R_0d72dc04afb278011bbb2bf4bb15df2b')
-    # res = b.shorten(longUrl='http://dl.dropbox.com/u/your_user_id' + gallery_name + '.html')
-    res = bitly.shorten(longUrl='http://dl.dropbox.com/u/413327/' + gallery_name + '.html')
-    print
-    print 'bit.ly URL: ' + res['url']
-    print
+#     # bitly = bitlyapi.BitLy('your_api_username', 'your_api_key')
+#     bitly = bitly.BitLy('randallma', 'R_0d72dc04afb278011bbb2bf4bb15df2b')
+#     # res = b.shorten(longUrl='http://dl.dropbox.com/u/your_user_id' + gallery_name + '.html')
+#     res = bitly.shorten(longUrl='http://dl.dropbox.com/u/413327/' + gallery_name + '.html')
+#     print
+#     print 'bit.ly URL: ' + res['url']
+#     print
+
 
 if __name__ == '__main__':
-    imgur(imgur_url, kindle_type, gallery_name)
-    if bool(dropbox_dir) == True:
-        dropbox(dropbox_dir, gallery_name)
+    imgur(imgur_url, gallery_name)
+    # if bool(dropbox_dir) == True:
+    #     dropbox(dropbox_dir, gallery_name)
