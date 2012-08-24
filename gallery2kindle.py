@@ -63,8 +63,8 @@ $('#gallery').cycle({
 <style>
 /* only tested on Kindle 3; should theoretically work on all 2/3/4 gen */
 #gallery img{
-    width: 600px;
-    height: 675px;
+    max-width: 600px;
+    max-height: 675px;
 }
 </style>
 </head>
