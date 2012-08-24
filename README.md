@@ -5,6 +5,10 @@ gallery2kindle is a Python 2 script that takes Imgur galleries and embeds them i
 
 Javascript must be enabled, and zoom settings should be set to "fit-to-width" (default) for optimal browsing experience.
 
+gallery2kindle powers the [Gallery2Kindle
+webapp](http://gallery2kindle.herokuapp.com/), which is really just a web
+frontend to using the script. ;)
+
 Usage
 -----
 
