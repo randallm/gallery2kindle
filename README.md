@@ -1,25 +1,28 @@
 gallery2kindle
 ==============
-Python script that takes Imgur galleries and embeds them into blank web pages optimally formatted for Kindle web browser. **NOT PERFECT**, but still better than the standard 'mobile' Imgur interface; images 'bump' down a little with each image change, simply readjust using the 4-way directional pad.
 
-If using Dropbox storage, please change the bit.ly API key and Dropbox user ids to one other than the examples given in gallery2kindle.py.
+gallery2kindle is a Python 2 script that takes Imgur galleries and embeds them into blank web pages optimally formatted for the 2/3/4 generation Kindle web browser.
 
-Usage:
+Javascript must be enabled, and zoom settings should be set to "fit-to-width" for optimal browsing experience.
 
-gallery2kindle.py [-h help] [-k Kindle version] [-n name of gallery] [-d Dropbox
-directory] [Imgur Gallery URL]
+Usage
+-----
 
-Gallery names with white space in them should be enclosed within quotes to avoid unrecognized argument errors.
+./gallery2kindle.py [Imgur Gallery URL] [Gallery Name]
 
-Example:
+**Example**
 
-gallery2kindle.py -k kindle3 -n Cats! [-d ~/Dropbox] http://imgur.com/a/gallery
+gallery2kindle.py http://imgur.com/a/Qlh7Y "Gallery Title"
 
-License:
+Requirements
+------------
 
-Gallery2Kindle Copyright (c) 2012 Randall Ma
-Python bit.ly wrapper Copyright (c) 2010 Fabian Neumann
-All rights reserved.
+* Requests
+
+License
+-------
+
+gallery2kindle Copyright (c) 2012 Randall Ma
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
