@@ -1,12 +1,9 @@
 #!/usr/bin/env python2
 # coding: utf-8
 
-import os
+import argparse
 import re
 import requests
-import shutil
-import argparse
-import bitly
 
 parser = argparse.ArgumentParser(
     description='Takes Imgur gallery and Kindle information; converts into Kindle-optimized gallery webpage.'
@@ -17,23 +14,15 @@ parser.add_argument('imgur_url',
     help='URL of Imgur gallery'
 )
 
-
 parser.add_argument('gallery_name',
     metavar='Gallery Name',
     help='Title of new, generated gallery'
 )
 
-# parser.add_argument('-d',
-#     dest='dropbox_dir',
-#     help='Dropbox directory (ex: ~/Folder1/Dropbox)'
-# )
 
 args = vars(parser.parse_args())
 
 for var, value in args.items():
-    # puts all namespace entires into dictionary and uses first dictionary's
-    # keys to get new variable names; then takes first dictionary's values
-    # and uses them as new variable values
     globals()[var] = value
 
 
@@ -92,22 +81,5 @@ $('#gallery').cycle({
     final_html = open(gallery_name + '.html', 'w+').write(final_html)
 
 
-# def dropbox(dropbox_dir, gallery_name):
-#     dropbox_dir = os.path.expanduser(dropbox_dir)
-
-#     shutil.copy2(gallery_name + '.html', dropbox_dir + '/Public/' + gallery_name + '.html')
-#     os.remove(gallery_name + '.html')
-
-#     # bitly = bitlyapi.BitLy('your_api_username', 'your_api_key')
-#     bitly = bitly.BitLy('randallma', 'R_0d72dc04afb278011bbb2bf4bb15df2b')
-#     # res = b.shorten(longUrl='http://dl.dropbox.com/u/your_user_id' + gallery_name + '.html')
-#     res = bitly.shorten(longUrl='http://dl.dropbox.com/u/413327/' + gallery_name + '.html')
-#     print
-#     print 'bit.ly URL: ' + res['url']
-#     print
-
-
 if __name__ == '__main__':
     imgur(imgur_url, gallery_name)
-    # if bool(dropbox_dir) == True:
-    #     dropbox(dropbox_dir, gallery_name)
